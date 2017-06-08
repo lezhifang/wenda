@@ -2,8 +2,6 @@ package com.nowcoder.dao;
 
 import com.nowcoder.model.User;
 import org.apache.ibatis.annotations.*;
-import sun.security.util.Password;
-
 /**
  * Created by nowcoder on 2016/7/2.
  */
@@ -21,8 +19,13 @@ public interface UserDAO {
     @Select({"select ",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{id}"})
     User selectById(int id);
 
+    @Select({"select ",SELECT_FIELDS,"from",TABLE_NAME,"where name=#{name}"})
+    User selectByName(String name);
+//    User selectByName(@Param("name") String name);  等价写法  其他语句类似
+
     @Update({"update",TABLE_NAME,"set password=#{password} where id=#{id}"})
     void updatePassword(User user);
+    //    void updatePassword(@Param("id") int id, @Param("password") String password);
 
     @Delete({"delete from",TABLE_NAME,"where id=#{id}"})
     void deleteById(int id);

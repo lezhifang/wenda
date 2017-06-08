@@ -41,7 +41,7 @@ public class IndexController {
     public String profile(@PathVariable("userId") int userId,
                           @PathVariable("groupId") String groupId,
                           @RequestParam(value = "type", defaultValue = "1") int type,
-                          @RequestParam(value = "key", required = false) String key) {
+                          @RequestParam(value = "key", required=false) String key) {//JDK1.7此处可以改为@RequestParam(value = "key", required=false  请求路径就可以不带key参数  默认返回null  不报错   而JDK1.8返回error:null)
         return String.format("Profile Page of %s / %d, t:%d k: %s", groupId, userId, type, key);
     }
 
