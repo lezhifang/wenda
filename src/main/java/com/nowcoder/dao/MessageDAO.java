@@ -36,7 +36,7 @@ public interface MessageDAO {
      *  #1. SELECT * FROM message WHERE from_id=22 or to_id=22 ORDER BY created_date DESC; #1. 选择跟当前登录用户有关的所有消息(即：当前登录用户既可以为发件人也可以为收件人)并按照创建时间进行降序排序
      *  #2.SELECT * FROM (SELECT * FROM message WHERE from_id=22 or to_id=22 ORDER BY created_date DESC)tt GROUP BY conversation_id;#2.将1中得到的结果按照conversation_id进行分组, 结果:显示每个分组中最新一条消息
      *  #3.将2中得到的结果按照创建时间进行降序排序, 结果:将每个分组中最新一条消息显示出来并按照创建时间排序
-     *  (这里使用message的id来存放每个会话中包含消息总数 这里count(id)是统计使用group by后的分组中的个数)
+     *  (这里使用message的id来存放每个会话中包含消息总数(注意：选取结果不影响数据库存储的数据) 这里count(id)是统计使用group by后的分组中的个数)
      *  SELECT from_id, to_id, content, has_read, conversation_id, created_date,count(id) as id
      *  FROM (SELECT * FROM message WHERE from_id=22 or to_id=22 ORDER BY created_date DESC)tt GROUP BY conversation_id
      *  ORDER BY created_date DESC LIMIT 0,10;
