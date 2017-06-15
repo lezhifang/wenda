@@ -1,7 +1,7 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.HostHolder;
-import com.nowcoder.model.Question;
+import com.nowcoder.model.*;
+import com.nowcoder.service.CommentService;
 import com.nowcoder.service.QuestionService;
 import com.nowcoder.service.UserService;
 import com.nowcoder.util.WendaUtil;
@@ -12,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.View;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by LZF on 2017/6/11.
@@ -22,11 +25,13 @@ public class QuestionController {
     private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @Autowired
-    HostHolder hostHolder;
+    private HostHolder hostHolder;
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private CommentService commentService;
 
     @RequestMapping(value="/question/add", method = {RequestMethod.POST})
     @ResponseBody
@@ -57,9 +62,17 @@ public class QuestionController {
     public String questionDetail(Model model,@PathVariable("qId") int qId){
         Question question = questionService.getQuestionById(qId);
         model.addAttribute("question", question);
-        model.addAttribute("user", userService.getUser(question.getUserId()));
+        //用于展示问题的所有评论
+        List<Comment> commentList = commentService.getCommentByEntity(qId, EntityType.ENTITY_QUESTION);
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+        for(Comment comment : commentList){
+            ViewObject vo = new ViewObject();
+            vo.set("comment",comment);
+            vo.set("user",userService.getUser(comment.getUserId()));
+            vos.add(vo);
+        }
+        model.addAttribute("comments", vos);
         return "detail";
     }
-
 
 }

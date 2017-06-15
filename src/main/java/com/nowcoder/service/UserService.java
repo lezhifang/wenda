@@ -85,7 +85,7 @@ public class UserService {
         loginTicketDAO.updateStatus(1, ticket);
     }
 
-    private String addLoginTicket(int userId){
+    public String addLoginTicket(int userId){
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setUserId(userId);//将ticket与用户进行关联
         loginTicket.setStatus(0);
@@ -97,4 +97,7 @@ public class UserService {
         return loginTicket.getTicket();
     }
 
+    public User selectByName(String name){
+        return userDAO.selectByName(name);
+    }
 }

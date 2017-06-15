@@ -39,7 +39,7 @@ public class InitDatabaseTests {
             userDAO.updatePassword(user);
 
             Question question = new Question();
-            question.setCommentCount(i);
+            question.setCommentCount(0);
             Date date = new Date();
             date.setTime(date.getTime() + 1000*3600*i);
             question.setCreatedDate(date);

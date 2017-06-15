@@ -25,8 +25,43 @@ class MyThread extends Thread{
             e.printStackTrace();
         }
     }
-
 }
+
+class Producer implements Runnable{
+    private BlockingQueue<String> queue;
+    public Producer(BlockingQueue<String> queue){
+        this.queue = queue;
+    }
+    @Override
+    public void run() {
+        try{
+            for(int i = 0; i < 100; i++){
+                Thread.sleep(1000);
+                queue.put(String.valueOf(i));
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+
+class Consumer implements Runnable{
+    private BlockingQueue<String> queue;
+    public Consumer(BlockingQueue<String> queue){
+        this.queue = queue;
+    }
+    @Override
+    public void run() {
+        try{
+            while (true){
+                System.out.println(Thread.currentThread().getName() + ":" + queue.take());
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+
 public class MultiThreadTests {
     public  void testThread(){
         for(int i = 0; i < 10; i++){
@@ -89,42 +124,7 @@ public class MultiThreadTests {
         }
     }
 
-     static class Consumer implements Runnable{
-        private BlockingQueue<String> queue;
-        public Consumer(BlockingQueue<String> queue){
-            this.queue = queue;
-        }
-        @Override
-        public void run() {
-            try{
-                while (true){
-                    System.out.println(Thread.currentThread().getName() + ":" + queue.take());
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    static class Producer implements Runnable{
-        private BlockingQueue<String> queue;
-        public Producer(BlockingQueue<String> queue){
-            this.queue = queue;
-        }
-        @Override
-        public void run() {
-            try{
-                for(int i = 0; i < 100; i++){
-                    Thread.sleep(1000);
-                    queue.put(String.valueOf(i));
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public  static void testBlockingQueue(){
+    public static void testBlockingQueue(){
         //这两个操作是：获取元素时等待队列变为非空，以及存储元素时等待空间变得可用
         BlockingQueue<String> queue = new ArrayBlockingQueue<String>(12);
         new Thread(new Producer(queue)).start();
@@ -261,10 +261,10 @@ public class MultiThreadTests {
     public static void main(String[] args){
         //testThread();
         //testSynchronized();
-        //testBlockingQueue();
+        testBlockingQueue();
         //testThreadLocal();
         //testExecutor();
         //testWithoutAtomic();
-        testFuture();
+        //testFuture();
     }
 }
