@@ -74,9 +74,9 @@ public class QuestionController {
             if(hostHolder.getUser() == null){
                 vo.set("liked", 0);
             }else{
-                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_QUESTION, qId));
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, comment.getId()));
             }
-            vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_QUESTION, qId));
+            vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_COMMENT, comment.getId()));
             vo.set("user",userService.getUser(comment.getUserId()));
             vos.add(vo);
         }

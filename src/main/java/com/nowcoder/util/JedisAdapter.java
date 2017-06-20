@@ -12,6 +12,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
 
+import java.util.List;
+
 
 /**
  * Created by LZF on 2017/6/16.
@@ -87,6 +89,41 @@ public class JedisAdapter implements InitializingBean{
         return false;
     }
 
+    public long lpush(String key, String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.lpush(key, value);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    /*
+    * 假如在指定时间内没有任何元素被弹出，则返回一个 nil 和等待时长(单位是秒)。 反之，返回一个含有两个元素的列表，第一个元素
+    * 是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
+    * 补充：当超时时间为"0"，表示不限制等待的时间，即如果没有新元素加入列表就会永远阻塞下去。
+    */
+    public List<String> brpop(int timeout, String key){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.brpop(timeout, key);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
     private static void print(int index, Object obj){
         System.out.println(String.format("%d. %s", index, obj.toString()));
     }
@@ -123,7 +160,9 @@ public class JedisAdapter implements InitializingBean{
         print(10, jedis.llen(listName));
         jedis.linsert(listName, BinaryClient.LIST_POSITION.AFTER, "a4", "ll");
         jedis.linsert(listName, BinaryClient.LIST_POSITION.BEFORE, "a4", "fang");
-        print(11, jedis.lrange(listName, 0, 12));//可以用来显示最新列表
+        print(11, jedis.lrange(listName, 0, 12));//可以用来显示最新列表 结果：[a8, a7, a6, a5, fang, a4, ll, a3, a2, a1, a0]
+        //假如在指定时间内没有任何元素被弹出，则返回一个 nil 和等待时长。 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
+        List<String> list= jedis.brpop(0, listName);//"list"和a0  Redis Brpop 命令移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
 
         //Hash：对象属性，不定长属性数
         String userKey = "userXXX";

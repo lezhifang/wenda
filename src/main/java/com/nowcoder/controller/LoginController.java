@@ -1,5 +1,8 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +29,8 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    EventProducer eventProducer;
 
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String register(Model model,
@@ -78,6 +83,10 @@ public class LoginController {
                     cookie.setMaxAge(3600*24*5);//设置有效期
                 }
                 response.addCookie(cookie);
+
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN).setExt("email","573448698@qq.com")
+                        .setExt("username", username).setActorId(Integer.parseInt(map.get("userId"))));
+
                 if(StringUtils.isNotBlank(next)){
                     return "redirect:" + next;
                 }

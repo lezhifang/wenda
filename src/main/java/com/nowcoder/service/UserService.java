@@ -78,6 +78,7 @@ public class UserService {
         //登陆成功，添加ticket
         String ticket = addLoginTicket(user.getId());
         map.put("ticket",ticket);
+        map.put("userId",String.valueOf(user.getId()));
         return map;
     }
 
