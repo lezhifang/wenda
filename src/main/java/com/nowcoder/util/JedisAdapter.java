@@ -7,12 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.BinaryClient;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -124,6 +123,145 @@ public class JedisAdapter implements InitializingBean{
         return null;
     }
 
+    public Jedis getJedis() {
+        return pool.getResource();
+    }
+
+    public Transaction multi(Jedis jedis){
+        try{
+            return jedis.multi();
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    public long zadd(String key, double score, String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zadd(key, score, value);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public long zrem(String key, String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zrem(key, value);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public List<Object> exec(Transaction tx, Jedis jedis){
+        try{
+            return tx.exec();//Exec 命令用于执行所有事务块内的命令  返回：事务块内所有命令的返回值，按命令执行的先后顺序排列。 当操作被打断时，返回空值 nil
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+            tx.discard();//使用discard可以rollback
+        }finally {
+           if (tx != null){
+               try {
+                   tx.close();
+               } catch (IOException e) {
+                   logger.error("发生异常" + e.getMessage());
+               }
+           }
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public Set<String> zrange(String key, int start, int end){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zrange(key, start, end);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public Set<String> zrevrange(String key, int start, int end){//从大到小排列
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zrevrange(key, start, end);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long zcard(String key){//从大到小排列
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zcard(key);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Double zscore(String key, String member){//从大到小排列
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zscore(key, member);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public List<String> lrange(String key, int start, int end){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.lrange(key, start, end);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
     private static void print(int index, Object obj){
         System.out.println(String.format("%d. %s", index, obj.toString()));
     }
@@ -211,12 +349,12 @@ public class JedisAdapter implements InitializingBean{
         print(31, jedis.zcount(rankKey, 61, 100));
         print(32, jedis.zscore(rankKey, "Lucy"));
         jedis.zincrby(rankKey, 2, "Lucy");
-        print(33, jedis.zscore(rankKey, "Lucy"));
+        print(33, jedis.zscore(rankKey, "Lucy"));//结果为 77.0
         jedis.zincrby(rankKey, 2, "Luc");
         print(34, jedis.zscore(rankKey, "Luc"));//2.0
-        print(35, jedis.zrange(rankKey, 0, 100));//[Luc, Jim, Ben, Lucy, Mei, Lee]
+        print(35, jedis.zrange(rankKey, 0, 100));//[Luc, Jim, Ben, Lucy, Mei, Lee]  从小到大排列
         print(36, jedis.zrange(rankKey, 1, 3));//[Jim, Ben, Lucy]
-        print(37, jedis.zrevrange(rankKey, 1, 3));//[Mei, Lucy, Ben]
+        print(37, jedis.zrevrange(rankKey, 1, 3));//[Mei, Lucy, Ben]  从大到小排列
         /**
          * 进行遍历 结果如下：
          38. Ben:60.0

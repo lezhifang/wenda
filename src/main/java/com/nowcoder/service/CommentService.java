@@ -37,7 +37,11 @@ public class CommentService {
        return commentDAO.getCommentCount(entityId, entityType);
    }
 
+    public int getUserCommentCount(int userId){
+        return commentDAO.getUserCommentCount(userId);
+    }
+
     public Comment getCommentById(int id){
-       return commentDAO.selectCommentById(id);
+        return commentDAO.selectCommentById(id);
     }
 }

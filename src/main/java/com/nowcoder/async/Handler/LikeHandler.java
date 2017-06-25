@@ -29,7 +29,7 @@ public class LikeHandler implements EventHandler{
     public void doHandler(EventModel model) {//发送站内信通知被点赞用户
         Message message = new Message();
         message.setFromId(WendaUtil.SYSTEM_USERID);//管理员发送的站内信
-        message.setToId(model.getEventOwnerId());
+        message.setToId(model.getEntityOwnerId());
         message.setHasRead(0);
         message.setCreatedDate(new Date());
         User user= userService.getUser(model.getActorId());

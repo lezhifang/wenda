@@ -2,36 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.nowcoder.dao.QuestionDAO">
-    <!-- 用来定义可重用的SQL代码段，可以包含在其他语句中，可以被静态地参数化-->
     <sql id="table">question</sql>
-    <sql id="insetFields">title, content, comment_count,created_date,user_id</sql>
-     <!--等价于 <sql id="selectFields">id, title, content, comment_count,created_date,user_id</sql> -->
-    <sql id="selectFields">id,
-        <include refid="insetFields"/>
+    <sql id="selectFields">id, title, content, comment_count,created_date,user_id
     </sql>
-    <!--<sql id="selectFields">id, title, content, comment_count,created_date,user_id</sql>-->
-
     <select id="selectLatestQuestions" resultType="com.nowcoder.model.Question">
         SELECT
         <include refid="selectFields"/>
         FROM
         <include refid="table"/>
-        <!--
-            该if表示如果userId等于0，则查询所有，否则查询指定userId的内容
-            这是xml和注解形式最核心的区别，可以做一些简单的逻辑操作
-        -->
+
         <if test="userId != 0">
             WHERE user_id = #{userId}
         </if>
         ORDER BY id DESC
         LIMIT #{offset},#{limit}
     </select>
-
-    <insert id="addQuestion" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO
-        <include refid="table"/>
-        (<include refid="insetFields"/>)
-        VALUES (#{title}, #{content}, #{commentCount},#{createdDate},#{userId})
-    </insert>
-
 </mapper>

@@ -44,7 +44,7 @@ public class LikeController {
 
         //将相关事件推进异步队列中并返回，然后主线程继续执行点赞操作  而推进异步队列中的事件另外开一个线程进行处理   这就是异步处理   防止卡死
         eventProducer.fireEvent(new EventModel(EventType.LIKE)
-                .setEventOwnerId(comment.getUserId())
+                .setEntityOwnerId(comment.getUserId())
                 .setEntityId(commentId)
                 .setEntityType(EntityType.ENTITY_COMMENT)
                 .setActorId(hostHolder.getUser().getId())

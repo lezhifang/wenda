@@ -57,7 +57,7 @@ public class MessageController {
     }
 
     @RequestMapping(value="/msg/list", method = {RequestMethod.GET})
-    public String conversationList(Model model){
+    public String getConversationList(Model model){
         try{
             if(hostHolder.getUser() == null){
                 return "redirect:/reglogin";
@@ -74,7 +74,7 @@ public class MessageController {
                 vo.set("unread", messageService.getConversationUnreadCount(localUserId, message.getConversationId()));
                 messages.add(vo);
             }
-            model.addAttribute("messages",messages);
+            model.addAttribute("conversations",messages);
         }catch(Exception e){
             logger.error("获取消息列表失败" + e.getMessage());
         }
@@ -92,6 +92,10 @@ public class MessageController {
             User user = userService.selectByName(toName);
             if(user == null){
                 return WendaUtil.getJSONString(1, "用户不存在");
+            }
+
+            if(hostHolder.getUser().getId() == user.getId()){
+                return WendaUtil.getJSONString(1, "无法发送消息给自己");
             }
 
             Message message = new Message();

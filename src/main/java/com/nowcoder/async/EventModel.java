@@ -12,7 +12,7 @@ public class EventModel {
     private int actorId;//发起该事件的Id
     private int entityType;
     private int entityId;
-    private int eventOwnerId;
+    private int entityOwnerId;//这个实体的拥有者
 
     private Map<String, String> exts = new HashMap<String, String>();//扩展字段  用来存放事件发生时需要保存的一些信息
 
@@ -60,12 +60,12 @@ public class EventModel {
         return this;
     }
 
-    public int getEventOwnerId() {
-        return eventOwnerId;
+    public int getEntityOwnerId() {
+        return entityOwnerId;
     }
 
-    public EventModel setEventOwnerId(int eventOwnerId) {
-        this.eventOwnerId = eventOwnerId;
+    public EventModel setEntityOwnerId(int entityOwnerId) {
+        this.entityOwnerId = entityOwnerId;
         return this;
     }
 

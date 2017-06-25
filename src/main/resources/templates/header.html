@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-ZA-Response-Id" content="46acde5c53db46f2806ccad726de9826">
-    <!--<title>首页 - 问答</title>   若存在该语句，则会覆盖其他页面定义的title-->
+    <title>首页 - 问答</title>
     <meta name="apple-itunes-app" content="app-id=432274380">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="mobile-agent" content="format=html5;url=https://nowcoder.com/">
     <meta id="znonce" name="znonce" content="d3edc464cf014708819feffde7ddd01e">
     <link rel="search" type="application/opensearchdescription+xml" href="https://nowcoder.com/static/search.xml" title="牛客">
-    <link rel="stylesheet" type="text/css" href="../styles/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
     <style>
     .zm-item-answer-author-info a.collapse {margin-top: 0}
     </style>
@@ -23,7 +23,7 @@
     <div class="zg-wrap modal-shifting clearfix" id="zh-top-inner">
         <a href="/" class="zu-top-link-logo" id="zh-top-link-logo" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_zhihu_logo">牛客</a>
         <div class="top-nav-profile">
-            #if(!$!{user})
+            #if(!$user)
             <ul class="topnav-noauth clearfix">
                 <li>
                     <a href="/reglogin">注册/登陆</a>
@@ -57,9 +57,9 @@
             </ul>
             #end
         </div>
-
+        #if ($user)
         <button class="zu-top-add-question" id="zu-top-add-question">提问</button>
-
+        #end
         <div role="search" id="zh-top-search" class="zu-top-search">
             <form method="GET" action="https://nowcoder.com/search" id="zh-top-search-form" class="zu-top-search-form">
                 <input type="hidden" name="type" value="content">
@@ -73,7 +73,7 @@
                     <a class="zu-top-nav-link" href="/" id="zh-top-link-home" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_home">首页</a>
                 </li>
                 <li class="zu-top-nav-li " id="zh-top-nav-explore">
-                    <a class="zu-top-nav-link" href="/">发现</a>
+                    <a class="zu-top-nav-link" href="/pullfeeds">发现</a>
                 </li>
                 #if ($user)
                 <li class="top-nav-noti zu-top-nav-li ">
