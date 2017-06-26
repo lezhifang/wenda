@@ -16,12 +16,12 @@ public interface QuestionDAO {
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
     //使用注解配置
-//    @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
-//            ") values (#{title},#{content},#{commentCount},#{createdDate},#{userId})"})
-//    int addQuestion(Question question);
+    @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
+            ") values (#{title},#{content},#{commentCount},#{createdDate},#{userId})"})
+    int addQuestion(Question question);
 
-    //使用xml配置方式，自动将传进去的参数Question对象中的属性值赋值给xml中的相应变量
-    int addQuestion(Question question);//添加成功返回1
+//    //使用xml配置方式，自动将传进去的参数Question对象中的属性值赋值给xml中的相应变量
+//    int addQuestion(Question question);//添加成功返回1
 
     @Select({"select ",SELECT_FIELDS,"from",TABLE_NAME,"where id=#{id}"})
     Question selectQuestionById(int id);

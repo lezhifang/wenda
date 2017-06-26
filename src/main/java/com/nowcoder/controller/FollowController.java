@@ -84,8 +84,10 @@ public class FollowController {
         boolean ret = followService.follow(hostHolder.getUser().getId(), EntityType.ENTITY_QUESTION, questionId);
 
         eventProducer.fireEvent(new EventModel(EventType.FOLLOW)
-                .setActorId(hostHolder.getUser().getId()).setEntityId(questionId)
-                .setEntityType(EntityType.ENTITY_QUESTION).setEntityOwnerId(q.getUserId()));
+                .setActorId(hostHolder.getUser().getId())
+                .setEntityId(questionId)
+                .setEntityType(EntityType.ENTITY_QUESTION)
+                .setEntityOwnerId(q.getUserId()));
 
         Map<String, Object> info = new HashMap<>();
         info.put("headUrl", hostHolder.getUser().getHeadUrl());

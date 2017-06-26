@@ -60,7 +60,7 @@ public class LikeController {
         if (hostHolder.getUser() == null) {
             return WendaUtil.getJSONString(999);//未登录  返回到登录页面
         }
-        Comment comment = commentService.getCommentById(commentId);//这个评论可以是问题的评论  也可以是评论的评论
+        Comment comment = commentService.getCommentById(commentId);
         long likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }
